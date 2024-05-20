@@ -7,25 +7,25 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import blueprintData from "@/data/blueprint_information.json";
+import ModelViewContainer from "@/components/modelviewer/ModelViewContainer";
 
 export const View = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const initialTitle = searchParams.get("title") || "설계 모델 Title";
     const initialDescription = searchParams.get("description") || "";
-    const initialImgSrc = searchParams.get("imgSrc") || "/placeholder.svg";
+    const initialModelSrc = searchParams.get("modelSrc") || "/model/scene.gltf";
 
     const [selectedModelTitle, setSelectedModelTitle] = useState(initialTitle);
     const [selectedModelDescription, setSelectedModelDescription] =
         useState(initialDescription);
-    const [selectedModelImgSrc, setSelectedModelImgSrc] =
-        useState(initialImgSrc);
+    const [selectedModelSrc, setSelectedModelSrc] = useState(initialModelSrc);
 
-    const handleModelSelect = (title, description, imgSrc) => {
+    const handleModelSelect = (title, description, modelSrc) => {
         setSelectedModelTitle(title);
         setSelectedModelDescription(description);
-        setSelectedModelImgSrc(imgSrc);
-        const params = new URLSearchParams({ title, description, imgSrc });
+        setSelectedModelSrc(modelSrc);
+        const params = new URLSearchParams({ title, description, modelSrc });
         router.push(`/view?${params.toString()}`);
     };
 
@@ -74,7 +74,7 @@ export const View = () => {
                                             handleModelSelect(
                                                 blueprint.title,
                                                 blueprint.description,
-                                                blueprint.imgSrc
+                                                blueprint.modelSrc
                                             )
                                         }
                                     >
@@ -109,17 +109,14 @@ export const View = () => {
                             <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
                                 {selectedModelDescription}
                             </p>
-                            <img
-                                alt={selectedModelTitle}
-                                className="h-full w-full object-contain p-8"
-                                height="600"
-                                src={selectedModelImgSrc}
-                                style={{
-                                    aspectRatio: "900/600",
-                                    objectFit: "cover",
-                                }}
-                                width="900"
-                            />
+                            <div
+                                className="h-full w-full mt-4"
+                                style={{ height: "60vh" }}
+                            >
+                                <ModelViewContainer
+                                    modelUrl={selectedModelSrc}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
