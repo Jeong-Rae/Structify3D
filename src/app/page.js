@@ -1,6 +1,6 @@
 // page.jsx
 import Layout from "./layout";
-import Landing from "@/components/component/Landing"; // Landing 컴포넌트를 default export로 임포트
+import Landing from "@/components/landing/Landing"; // Landing 컴포넌트를 default export로 임포트
 
 export default function Page() {
     return (
