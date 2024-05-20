@@ -1,0 +1,22 @@
+[
+    {
+        "title": "현대식 사무실 건물",
+        "description": "현대식 사무실 건물의 상세한 3D 건축 청사진입니다.",
+        "imgSrc": "/placeholder.svg"
+    },
+    {
+        "title": "지속 가능한 주거 단지",
+        "description": "지속 가능한 주거 단지를 위한 친환경 3D 건축 청사진입니다.",
+        "imgSrc": "/placeholder.svg"
+    },
+    {
+        "title": "미니멀리스트 아트 갤러리",
+        "description": "미니멀리스트 아트 갤러리를 위한 세련되고 현대적인 3D 건축 청사진입니다.",
+        "imgSrc": "/placeholder.svg"
+    },
+    {
+        "title": "미래형 고층 빌딩",
+        "description": "미래형 고층 빌딩을 위한 혁신적인 3D 건축 청사진입니다.",
+        "imgSrc": "/placeholder.svg"
+    }
+]

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * 이 코드는 Vercel의 v0에 의해 생성되었습니다.
  * @see https://v0.dev/t/9kCvljCl9gl
@@ -31,11 +33,70 @@ import {
     AccordionItem,
     Accordion,
 } from "@/components/ui/accordion";
+import {
+    DownloadIcon,
+    EyeIcon,
+    SunIcon,
+    MonitorIcon,
+    MoonIcon,
+    MenuIcon,
+    CuboidIcon,
+} from "@/components/ui/icons";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
+
+import { InfoCard } from "@/components/infocard/InfoCard";
+import blueprintData from "@/data/blueprint_information.json";
 
 // landing 컴포넌트: 페이지의 메인 콘텐츠를 렌더링합니다.
-export function landing() {
+export default function Landing() {
+    const [theme, setTheme] = useState("system");
+
+    const handleThemeChange = (newTheme) => {
+        console.log("Changing theme to:", newTheme);
+        setTheme(newTheme);
+        if (newTheme === "system") {
+            document.documentElement.removeAttribute("data-theme");
+        } else {
+            document.documentElement.setAttribute("data-theme", newTheme);
+        }
+    };
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const handleSystemThemeChange = (e) => {
+            console.log(
+                "System theme change detected:",
+                e.matches ? "dark" : "light"
+            );
+            if (theme === "system") {
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    e.matches ? "dark" : "light"
+                );
+            }
+        };
+
+        mediaQuery.addEventListener("change", handleSystemThemeChange);
+        return () =>
+            mediaQuery.removeEventListener("change", handleSystemThemeChange);
+    }, [theme]);
+
+    useEffect(() => {
+        console.log("Initial theme setting:", theme);
+        if (theme === "system") {
+            document.documentElement.setAttribute(
+                "data-theme",
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "dark"
+                    : "light"
+            );
+        } else {
+            document.documentElement.setAttribute("data-theme", theme);
+        }
+    }, [theme]);
+
     return (
         <div className="flex flex-col min-h-screen">
             {/* 헤더 섹션 */}
@@ -50,7 +111,7 @@ export function landing() {
                         <span>Structify 3D</span>
                     </Link>
                     {/* 네비게이션 메뉴 */}
-                    {/* <nav className="hidden md:flex items-center gap-4">
+                    <nav className="hidden md:flex items-center gap-4">
                         <Link
                             className="text-sm font-medium hover:text-gray-700 dark:hover:text-gray-300"
                             href="#"
@@ -75,7 +136,7 @@ export function landing() {
                         >
                             연락처
                         </Link>
-                    </nav> */}
+                    </nav>
                     {/* 드롭다운 메뉴 및 모바일 메뉴 버튼 */}
                     <div className="flex items-center gap-4">
                         <DropdownMenu>
@@ -90,22 +151,28 @@ export function landing() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => handleThemeChange("light")}
+                                >
                                     <div className="flex items-center gap-2">
                                         <SunIcon className="w-5 h-5" />
-                                        <span>라이트</span>
+                                        <span>Light</span>
                                     </div>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => handleThemeChange("dark")}
+                                >
                                     <div className="flex items-center gap-2">
                                         <MoonIcon className="w-5 h-5" />
-                                        <span>다크</span>
+                                        <span>Dark</span>
                                     </div>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => handleThemeChange("system")}
+                                >
                                     <div className="flex items-center gap-2">
                                         <MonitorIcon className="w-5 h-5" />
-                                        <span>시스템</span>
+                                        <span>System</span>
                                     </div>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -176,127 +243,14 @@ export function landing() {
                             </Link>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                <img
-                                    alt="3D 건축 청사진"
-                                    className="w-full h-48 object-cover"
-                                    height={300}
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "400/300",
-                                        objectFit: "cover",
-                                    }}
-                                    width={400}
+                            {blueprintData.map((blueprint, index) => (
+                                <InfoCard
+                                    key={index}
+                                    title={blueprint.title}
+                                    description={blueprint.description}
+                                    imgSrc={blueprint.imgSrc}
                                 />
-                                <div className="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                            현대식 사무실 건물
-                                        </h3>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                            현대식 사무실 건물의 상세한 3D 건축
-                                            청사진입니다.
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <Button size="sm">
-                                            <EyeIcon className="w-4 h-4 mr-2" />
-                                            View
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                <img
-                                    alt="3D 건축 청사진"
-                                    className="w-full h-48 object-cover"
-                                    height={300}
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "400/300",
-                                        objectFit: "cover",
-                                    }}
-                                    width={400}
-                                />
-                                <div className="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                            지속 가능한 주거 단지
-                                        </h3>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                            지속 가능한 주거 단지를 위한 친환경
-                                            3D 건축 청사진입니다.
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <Button size="sm">
-                                            <EyeIcon className="w-4 h-4 mr-2" />
-                                            View
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                <img
-                                    alt="3D 건축 청사진"
-                                    className="w-full h-48 object-cover"
-                                    height={300}
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "400/300",
-                                        objectFit: "cover",
-                                    }}
-                                    width={400}
-                                />
-                                <div className="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                            미니멀리스트 아트 갤러리
-                                        </h3>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                            미니멀리스트 아트 갤러리를 위한
-                                            세련되고 현대적인 3D 건축
-                                            청사진입니다.
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <Button size="sm">
-                                            <EyeIcon className="w-4 h-4 mr-2" />
-                                            View
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                <img
-                                    alt="3D 건축 청사진"
-                                    className="w-full h-48 object-cover"
-                                    height={300}
-                                    src="/placeholder.svg"
-                                    style={{
-                                        aspectRatio: "400/300",
-                                        objectFit: "cover",
-                                    }}
-                                    width={400}
-                                />
-                                <div className="p-4 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                            미래형 고층 빌딩
-                                        </h3>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                            미래형 고층 빌딩을 위한 혁신적인 3D
-                                            건축 청사진입니다.
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <Button size="sm">
-                                            <EyeIcon className="w-4 h-4 mr-2" />
-                                            View
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -363,258 +317,19 @@ export function landing() {
                             </div>
                             {/* 필터링된 청사진 리스트 */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                    <img
-                                        alt="3D 건축 청사진"
-                                        className="w-full h-48 object-cover"
-                                        height={300}
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "400/300",
-                                            objectFit: "cover",
-                                        }}
-                                        width={400}
+                                {blueprintData.map((blueprint, index) => (
+                                    <InfoCard
+                                        key={index}
+                                        title={blueprint.title}
+                                        description={blueprint.description}
+                                        imgSrc={blueprint.imgSrc}
                                     />
-                                    <div className="p-4 flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                                친환경 주거 단지
-                                            </h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                                주거 단지를 위한 지속 가능한 3D
-                                                건축 청사진입니다.
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <Button size="sm">
-                                                <EyeIcon className="w-4 h-4 mr-2" />
-                                                View
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                    <img
-                                        alt="3D 건축 청사진"
-                                        className="w-full h-48 object-cover"
-                                        height={300}
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "400/300",
-                                            objectFit: "cover",
-                                        }}
-                                        width={400}
-                                    />
-                                    <div className="p-4 flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                                혁신적인 사무실 단지
-                                            </h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                                사무실 단지를 위한 최첨단 3D
-                                                건축 청사진입니다.
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <Button size="sm">
-                                                <EyeIcon className="w-4 h-4 mr-2" />
-                                                View
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-                                    <img
-                                        alt="3D 건축 청사진"
-                                        className="w-full h-48 object-cover"
-                                        height={300}
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "400/300",
-                                            objectFit: "cover",
-                                        }}
-                                        width={400}
-                                    />
-                                    <div className="p-4 flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                                미래형 대학 캠퍼스
-                                            </h3>
-                                            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                                대학 캠퍼스를 위한 비전 있는 3D
-                                                건축 청사진입니다.
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <Button size="sm">
-                                                <EyeIcon className="w-4 h-4 mr-2" />
-                                                View
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </section>
             </main>
         </div>
-    );
-}
-
-// 아이콘 컴포넌트: CuboidIcon
-function CuboidIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="m21.12 6.4-6.05-4.06a2 2 0 0 0-2.17-.05L2.95 8.41a2 2 0 0 0-.95 1.7v5.82a2 2 0 0 0 .88 1.66l6.05 4.07a2 2 0 0 0 2.17.05l9.95-6.12a2 2 0 0 0 .95-1.7V8.06a2 2 0 0 0-.88-1.66Z" />
-            <path d="M10 22v-8L2.25 9.15" />
-            <path d="m10 14 11.77-6.87" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: DownloadIcon
-function DownloadIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" x2="12" y1="15" y2="3" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: EyeIcon
-function EyeIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-            <circle cx="12" cy="12" r="3" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: MenuIcon
-function MenuIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <line x1="4" x2="20" y1="12" y2="12" />
-            <line x1="4" x2="20" y1="6" y2="6" />
-            <line x1="4" x2="20" y1="18" y2="18" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: MonitorIcon
-function MonitorIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <rect width="20" height="14" x="2" y="3" rx="2" />
-            <line x1="8" x2="16" y1="21" y2="21" />
-            <line x1="12" x2="12" y1="17" y2="21" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: MoonIcon
-function MoonIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-        </svg>
-    );
-}
-
-// 아이콘 컴포넌트: SunIcon
-function SunIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <circle cx="12" cy="12" r="4" />
-            <path d="M12 2v2" />
-            <path d="M12 20v2" />
-            <path d="m4.93 4.93 1.41 1.41" />
-            <path d="m17.66 17.66 1.41 1.41" />
-            <path d="M2 12h2" />
-            <path d="M20 12h2" />
-            <path d="m6.34 17.66-1.41 1.41" />
-            <path d="m19.07 4.93-1.41 1.41" />
-        </svg>
     );
 }
