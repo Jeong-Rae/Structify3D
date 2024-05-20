@@ -4,7 +4,7 @@
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Environment, Grid } from "@react-three/drei";
-import LoadingSpinner from "@/components/spinner/loadingSpinner";
+import LoadingSpinner from "@/components/spinner/LoadingSpinner";
 
 function Model({ url }) {
     const { scene } = useGLTF(url);
