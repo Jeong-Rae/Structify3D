@@ -1,9 +1,19 @@
-// components/InfoCard.jsx
+"use client";
 
+// components/infocard/InfoCard.jsx
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { EyeIcon } from "@/components/ui/icons"; // 아이콘 경로는 실제 위치에 따라 수정하세요
+import { EyeIcon } from "@/components/ui/icons";
 
 export const InfoCard = ({ title, description, imgSrc }) => {
+    const router = useRouter();
+
+    const handleViewClick = () => {
+        const params = new URLSearchParams({ title, description, imgSrc });
+        router.push(`/view?${params.toString()}`);
+    };
+
     return (
         <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
             <img
@@ -27,7 +37,7 @@ export const InfoCard = ({ title, description, imgSrc }) => {
                     </p>
                 </div>
                 <div className="flex items-center justify-between">
-                    <Button size="sm">
+                    <Button size="sm" onClick={handleViewClick}>
                         <EyeIcon className="w-4 h-4 mr-2" />
                         View
                     </Button>

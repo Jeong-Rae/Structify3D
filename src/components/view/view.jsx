@@ -1,158 +1,119 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/xDTx3hPxw4D
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
-import { Button } from "@/components/ui/button";
-import { SearchIcon, SettingsIcon, ArrowLeftIcon } from "@/components/ui/icons";
+"use client";
 
-export default function View() {
+// components/view/View.jsx
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon } from "@/components/ui/icons";
+import blueprintData from "@/data/blueprint_information.json";
+
+export const View = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const initialTitle = searchParams.get("title") || "설계 모델 Title";
+    const initialDescription = searchParams.get("description") || "";
+    const initialImgSrc = searchParams.get("imgSrc") || "/placeholder.svg";
+
+    const [selectedModelTitle, setSelectedModelTitle] = useState(initialTitle);
+    const [selectedModelDescription, setSelectedModelDescription] =
+        useState(initialDescription);
+    const [selectedModelImgSrc, setSelectedModelImgSrc] =
+        useState(initialImgSrc);
+
+    const handleModelSelect = (title, description, imgSrc) => {
+        setSelectedModelTitle(title);
+        setSelectedModelDescription(description);
+        setSelectedModelImgSrc(imgSrc);
+        const params = new URLSearchParams({ title, description, imgSrc });
+        router.push(`/view?${params.toString()}`);
+    };
+
+    const handleBackClick = () => {
+        router.push("/");
+    };
+
     return (
         <>
-            <header className="flex h-14 items-center justify-between border-b bg-gray-100/40 px-4 dark:bg-gray-800/40 lg:h-[60px] lg:px-6">
+            <header className="flex h-16 items-center justify-between border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 lg:h-[70px] lg:px-8">
                 <div className="flex items-center gap-4">
-                    <Button size="icon" variant="ghost">
-                        <ArrowLeftIcon className="h-5 w-5" />
-                        <span className="sr-only">Go back</span>
+                    <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={handleBackClick}
+                    >
+                        <ArrowLeftIcon className="h-6 w-6" />
+                        <span className="sr-only">뒤로가기</span>
                     </Button>
-                    <h1 className="text-lg font-semibold">Blueprint Models</h1>
+                    <h1 className="text-xl lg:text-2xl font-semibold">
+                        Structify 3D
+                    </h1>
                 </div>
                 <div className="flex items-center gap-4">
-                    <Button size="icon" variant="ghost">
+                    {/* <Button size="icon" variant="ghost">
                         <SearchIcon className="h-5 w-5" />
                         <span className="sr-only">Search</span>
                     </Button>
                     <Button size="icon" variant="ghost">
                         <SettingsIcon className="h-5 w-5" />
                         <span className="sr-only">Settings</span>
-                    </Button>
+                    </Button> */}
                 </div>
             </header>
             <div className="grid min-h-screen w-full lg:grid-cols-[300px_1fr]">
                 <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
                     <div className="flex h-full max-h-screen flex-col gap-4 p-4">
-                        <h3 className="text-lg font-semibold">
-                            Blueprint Models
-                        </h3>
+                        <h3 className="text-lg font-semibold">모델 목록</h3>
                         <div className="flex-1 overflow-auto">
                             <nav className="grid gap-2">
-                                <button className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Residential House
-                                    </span>
-                                </button>
-                                <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Commercial Building
-                                    </span>
-                                </button>
-                                <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Industrial Warehouse
-                                    </span>
-                                </button>
-                                <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Retail Store
-                                    </span>
-                                </button>
-                                <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Office Complex
-                                    </span>
-                                </button>
-                                <button className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
-                                    <img
-                                        alt="Model Thumbnail"
-                                        className="rounded-md"
-                                        height="40"
-                                        src="/placeholder.svg"
-                                        style={{
-                                            aspectRatio: "40/40",
-                                            objectFit: "cover",
-                                        }}
-                                        width="40"
-                                    />
-                                    <span className="text-sm font-medium">
-                                        Apartment Building
-                                    </span>
-                                </button>
+                                {blueprintData.map((blueprint, index) => (
+                                    <button
+                                        key={index}
+                                        className="flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
+                                        onClick={() =>
+                                            handleModelSelect(
+                                                blueprint.title,
+                                                blueprint.description,
+                                                blueprint.imgSrc
+                                            )
+                                        }
+                                    >
+                                        <img
+                                            alt="Model Thumbnail"
+                                            className="rounded-md"
+                                            height="40"
+                                            src={blueprint.imgSrc}
+                                            style={{
+                                                aspectRatio: "40/40",
+                                                objectFit: "cover",
+                                            }}
+                                            width="40"
+                                        />
+                                        <span className="text-sm font-medium">
+                                            {blueprint.title}
+                                        </span>
+                                    </button>
+                                ))}
                             </nav>
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col">
-                    <div className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
-                        <Button size="icon" variant="ghost">
-                            <ArrowLeftIcon className="h-5 w-5" />
-                            <span className="sr-only">Go back</span>
-                        </Button>
-                        <h1 className="text-lg font-semibold">
-                            Blueprint Models
+                <div className="flex flex-col items-center text-center">
+                    <div className="flex h-16 lg:h-[70px] items-center justify-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 w-full">
+                        <h1 className="text-xl lg:text-2xl font-semibold">
+                            {selectedModelTitle}
                         </h1>
                     </div>
-                    <div className="flex-1 p-4 md:p-6">
-                        <div className="h-full w-full rounded-lg border bg-gray-100 dark:border-gray-800 dark:bg-gray-950">
+                    <div className="flex-1 p-4 md:p-6 w-full">
+                        <div className="h-full w-full rounded-lg border bg-gray-100 dark:border-gray-800 dark:bg-gray-950 flex flex-col items-center">
+                            <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
+                                {selectedModelDescription}
+                            </p>
                             <img
-                                alt="Blueprint Model"
+                                alt={selectedModelTitle}
                                 className="h-full w-full object-contain p-8"
                                 height="600"
-                                src="/placeholder.svg"
+                                src={selectedModelImgSrc}
                                 style={{
                                     aspectRatio: "900/600",
                                     objectFit: "cover",
@@ -165,4 +126,6 @@ export default function View() {
             </div>
         </>
     );
-}
+};
+
+export default View;
