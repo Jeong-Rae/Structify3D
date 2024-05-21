@@ -5,6 +5,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { EyeIcon } from "@/components/ui/icons";
+import Image from "next/image";
 
 export const InfoCard = ({ title, description, imgSrc }) => {
     const router = useRouter();
@@ -16,7 +17,7 @@ export const InfoCard = ({ title, description, imgSrc }) => {
 
     return (
         <div className="bg-white dark:bg-gray-950 rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
-            <img
+            <Image
                 alt="3D 건축 청사진"
                 className="w-full h-48 object-cover"
                 height={300}

@@ -45,6 +45,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 import { InfoCard } from "@/components/infocard/InfoCard";
 import blueprintData from "@/data/blueprint_information.json";
@@ -210,7 +211,7 @@ export default function Landing() {
                                 </div>
                             </div>
                             <div className="relative w-full h-[500px] md:h-[600px]">
-                                <img
+                                <Image
                                     alt="3D 건축 청사진"
                                     className="w-full h-full object-cover rounded-lg shadow-lg"
                                     height={600}

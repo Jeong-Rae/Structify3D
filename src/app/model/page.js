@@ -1,11 +1,11 @@
 // pages/index.js
 import Layout from "@/app/layout";
-import { ViewContainer } from "@/components/modelviewer/ModelViewContainer";
+import ModelViewContainer from "@/components/modelviewer/ModelViewContainer";
 
 export default function Page() {
     return (
         <Layout>
-            <ViewContainer />
+            <ModelViewContainer modelUrl="/model/scene.gltf" />;
         </Layout>
     );
 }

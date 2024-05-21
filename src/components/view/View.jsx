@@ -1,15 +1,14 @@
 "use client";
 
-// components/view/View.jsx
-
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import blueprintData from "@/data/blueprint_information.json";
-import ModelViewContainer from "@/components/modelviewer/ModelViewContainer";
+import ModelViewer from "@/components/modelviewer/ModelViewer";
+import Image from "next/image";
 
-export const View = () => {
+const SearchParamsComponent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const initialTitle = searchParams.get("title") || "설계 모델 Title";
@@ -19,12 +18,13 @@ export const View = () => {
     const [selectedModelTitle, setSelectedModelTitle] = useState(initialTitle);
     const [selectedModelDescription, setSelectedModelDescription] =
         useState(initialDescription);
-    const [selectedModelSrc, setSelectedModelSrc] = useState(initialModelSrc);
+    const [selectedModelModelSrc, setSelectedModelModelSrc] =
+        useState(initialModelSrc);
 
     const handleModelSelect = (title, description, modelSrc) => {
         setSelectedModelTitle(title);
         setSelectedModelDescription(description);
-        setSelectedModelSrc(modelSrc);
+        setSelectedModelModelSrc(modelSrc);
         const params = new URLSearchParams({ title, description, modelSrc });
         router.push(`/view?${params.toString()}`);
     };
@@ -49,16 +49,7 @@ export const View = () => {
                         Structify 3D
                     </h1>
                 </div>
-                <div className="flex items-center gap-4">
-                    {/* <Button size="icon" variant="ghost">
-                        <SearchIcon className="h-5 w-5" />
-                        <span className="sr-only">Search</span>
-                    </Button>
-                    <Button size="icon" variant="ghost">
-                        <SettingsIcon className="h-5 w-5" />
-                        <span className="sr-only">Settings</span>
-                    </Button> */}
-                </div>
+                <div className="flex items-center gap-4"></div>
             </header>
             <div className="grid min-h-screen w-full lg:grid-cols-[300px_1fr]">
                 <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
@@ -78,16 +69,12 @@ export const View = () => {
                                             )
                                         }
                                     >
-                                        <img
+                                        <Image
                                             alt="Model Thumbnail"
                                             className="rounded-md"
-                                            height="40"
+                                            height={40}
                                             src={blueprint.imgSrc}
-                                            style={{
-                                                aspectRatio: "40/40",
-                                                objectFit: "cover",
-                                            }}
-                                            width="40"
+                                            width={40}
                                         />
                                         <span className="text-sm font-medium">
                                             {blueprint.title}
@@ -109,19 +96,26 @@ export const View = () => {
                             <p className="text-center text-gray-600 dark:text-gray-400 mt-4">
                                 {selectedModelDescription}
                             </p>
-                            <div
-                                className="h-full w-full mt-4"
-                                style={{ height: "60vh" }}
-                            >
-                                <ModelViewContainer
-                                    modelUrl={selectedModelSrc}
-                                />
+                            <div className="h-full w-full">
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <ModelViewer
+                                        modelUrl={selectedModelModelSrc}
+                                    />
+                                </Suspense>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </>
+    );
+};
+
+export const View = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SearchParamsComponent />
+        </Suspense>
     );
 };
 
